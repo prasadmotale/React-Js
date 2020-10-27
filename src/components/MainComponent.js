@@ -10,7 +10,7 @@ class Main extends Component {
     super(props);
     this.state = {
         dishes: DISHES,
-        selectedDish: 0
+        selectedDish: null
     };
   }
 
