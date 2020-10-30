@@ -1,38 +1,33 @@
 import React from 'react'
-import { Card, CardBody, CardText, CardImg, CardTitle } from 'reactstrap';
+import { Card, CardBody, CardText, CardImg, CardTitle,Breadcrumb,BreadcrumbItem } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
-
-
-
-  function RenderComments({dish}) {
-    const comments = dish.comments.map((comment) => {
-      return (
-          <div className="container">
-            <div key={comment.id}>
-                <ul>{comment.comment}</ul>
-                <ul>-- {comment.author} ,{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}</ul>
-            </div>
-          </div>
-        
-        )
-      })
-    if (dish.comments.length === 0) {
-      return <div></div>
-    } else {
-      return (
-        <div className="col-12 col-md-5 m-1">
-          <Card>
-            <CardBody>
-              <CardText>
-                <h4>Comments</h4>
-                {comments}
-              </CardText>
-            </CardBody>
-          </Card>
-        </div>
-      )
-    }
+function RenderComments({comments}) {
+     
+  if (comments != null) {
+    return (
+      <div className="col-12 col-md m-1">
+        <h4>Comments</h4>
+          <ul className="list-unstyled">
+            {comments.map((comment) =>{
+                return(
+                  <li key={comment.id}>
+                    <p>{comment.comment}</p>
+                    <p>--{comment.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}</p>
+                  </li>
+                );
+              })
+            };
+          </ul>
+      </div>
+    );
   }
+  else {
+    return(
+      <div></div>
+    );
+  }
+}
 
   function RenderDish({dish}) {
     return (
@@ -45,23 +40,34 @@ import { Card, CardBody, CardText, CardImg, CardTitle } from 'reactstrap';
           </CardBody>
         </Card>
       </div>
-    )
+    );
   }
 
   const DishDetail =(props) => {
 
     if (props.dish != null) {
-        return (
-            <div className="container">
-                <div key={props.dish.id} className="row">
-                    <RenderDish dish={props.dish}/>
-                    <RenderComments dish={props.dish}/>
-                </div>
-            </div>
-          );
+      return (
+        <div className="container">
+        <div className="row">
+            <Breadcrumb>
+
+                <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
+                <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+            </Breadcrumb>
+            <div className="col-12">
+                <h3>{props.dish.name}</h3>
+                <hr />
+            </div>                
+        </div>
+          <div className="row">
+            <RenderDish dish={props.dish} />
+            <RenderComments comments={props.comments} />
+          </div>
+        </div>
+      );
     } 
     else {
-      return (<div></div>);
+      return (<div>dish not found</div>);
     }
   }
 
